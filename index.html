@@ -186,13 +186,27 @@
                 <div id="requester-view">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                         <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">รายการแจ้งของคุณ</h2>
-                        <button id="open-request-modal-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg shadow-blue-500/30">
+                        <!-- Desktop Button -->
+                        <button id="open-request-modal-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-blue-700 transition-all duration-300 hidden sm:flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg shadow-blue-500/30">
                             <i data-lucide="plus" class="w-5 h-5"></i>
                             <span>แจ้งอันตรายใหม่</span>
                         </button>
                     </div>
+
+                    <!-- Mobile Action Buttons for Requester -->
+                    <div class="grid grid-cols-2 gap-3 mb-6 sm:hidden">
+                        <button id="toggle-requester-filters-btn" class="flex items-center justify-center gap-2 p-3 bg-gray-700 dark:bg-gray-600 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                            <span>ค้นหา</span>
+                        </button>
+                        <button id="open-request-modal-btn-requester-mobile" class="flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                            <span>แจ้งใหม่</span>
+                        </button>
+                    </div>
+
                     <!-- Requester Filters -->
-                    <div class="bg-white dark:bg-gray-800/50 p-4 rounded-lg shadow-sm mb-6 border border-gray-200 dark:border-gray-700">
+                    <div id="requester-filters-container" class="bg-white dark:bg-gray-800/50 p-4 rounded-lg shadow-sm mb-6 border border-gray-200 dark:border-gray-700 hidden sm:block">
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                             <input type="text" id="requester-search-problem" placeholder="ค้นหาตามชื่อปัญหา..." class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                             <input type="date" id="requester-search-date" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
@@ -227,17 +241,17 @@
                         </div>
                     </div>
 
-                    <!-- NEW: Mobile Action Buttons (inspired by admin.jpg) -->
-                    <div class="grid grid-cols-3 gap-3 mb-6 sm:hidden">
+                    <!-- REVISED: Mobile Action Buttons -->
+                    <div id="admin-mobile-actions" class="grid gap-3 mb-6 sm:hidden">
                         <button id="toggle-admin-filters-btn" class="flex items-center justify-center gap-2 p-3 bg-gray-700 dark:bg-gray-600 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors">
                             <i data-lucide="search" class="w-5 h-5"></i>
                             <span>ค้นหา</span>
                         </button>
-                        <button id="show-all-requests-btn" class="flex items-center justify-center gap-2 p-3 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
-                            <i data-lucide="layout-grid" class="w-5 h-5"></i>
-                            <span>ภาพรวม</span>
+                        <button id="show-tech-dashboard-btn-mobile" class="hidden flex items-center justify-center gap-2 p-3 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
+                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                            <span>แดชบอร์ดช่าง</span>
                         </button>
-                        <button id="open-request-modal-btn-admin-mobile" class="flex items-center justify-center gap-2 p-3 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors">
+                        <button id="open-request-modal-btn-admin-mobile" class="flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
                             <i data-lucide="plus" class="w-5 h-5"></i>
                             <span>แจ้งใหม่</span>
                         </button>
@@ -744,12 +758,15 @@
         const techDashboardSummary = document.getElementById('tech-dashboard-summary');
         const techDashboardRequests = document.getElementById('tech-dashboard-requests');
         const techDashboardBackBtn = document.getElementById('tech-dashboard-back-btn');
-        // NEW: Mobile Admin Controls
+        // Mobile Admin Controls
         const toggleAdminFiltersBtn = document.getElementById('toggle-admin-filters-btn');
         const adminFiltersContainer = document.getElementById('admin-filters-container');
         const openRequestModalBtnAdminMobile = document.getElementById('open-request-modal-btn-admin-mobile');
-        const showAllRequestsBtn = document.getElementById('show-all-requests-btn');
-        const mobileButtons = [toggleAdminFiltersBtn, showAllRequestsBtn];
+        const showTechDashboardBtnMobile = document.getElementById('show-tech-dashboard-btn-mobile');
+        // Mobile Requester Controls
+        const toggleRequesterFiltersBtn = document.getElementById('toggle-requester-filters-btn');
+        const requesterFiltersContainer = document.getElementById('requester-filters-container');
+        const openRequestModalBtnRequesterMobile = document.getElementById('open-request-modal-btn-requester-mobile');
 
 
         const showLoading = (show) => loadingOverlay.classList.toggle('hidden', !show);
@@ -952,10 +969,10 @@
                 let data;
                 if (currentUser.isAdmin) {
                     data = await callGasApi({ action: 'getRequests', isAdmin: true });
-                    adminViewTitle.textContent = 'แดชบอร์ดจัดการ (สำหรับผู้ดูแลระบบ)';
+                    adminViewTitle.textContent = 'แดชบอร์ดจัดการ';
                 } else if (currentUser.isTechnician) {
                     data = await callGasApi({ action: 'getRequests', isTechnician: true, employeeId: currentUser.id });
-                    adminViewTitle.textContent = 'รายการที่ได้รับมอบหมาย (สำหรับช่าง)';
+                    adminViewTitle.textContent = 'แดชบอร์ดช่าง';
                 } else {
                     data = await callGasApi({ action: 'getRequests', requesterId: currentUser.id });
                 }
@@ -1045,7 +1062,21 @@
             const isManager = currentUser.isAdmin || currentUser.isTechnician;
             showElement(adminView, isManager); 
             showElement(requesterView, !isManager); 
-            showElement(showTechDashboardBtn, currentUser.isAdmin); // Show tech dashboard button only for admins
+            showElement(showTechDashboardBtn, currentUser.isAdmin); // Desktop button
+
+            // Handle mobile admin buttons
+            if (isManager) {
+                const adminMobileActions = document.getElementById('admin-mobile-actions');
+                if (currentUser.isAdmin) {
+                    showElement(showTechDashboardBtnMobile, true);
+                    adminMobileActions.classList.add('grid-cols-3');
+                    adminMobileActions.classList.remove('grid-cols-2');
+                } else { // Is a technician but not an admin
+                    showElement(showTechDashboardBtnMobile, false);
+                    adminMobileActions.classList.add('grid-cols-2');
+                    adminMobileActions.classList.remove('grid-cols-3');
+                }
+            }
 
             await loadDashboardData();
             await loadTechnicians(); 
@@ -1346,37 +1377,52 @@
             showElement(techDashboardContent, true);
             techDashboardName.textContent = `ภาพรวมของ: ${techName}`;
             techDashboardRequests.innerHTML = '<p class="text-gray-500 col-span-full text-center py-12">กำลังโหลดข้อมูล...</p>';
-            techDashboardSummary.innerHTML = '';
-
+            
+            const summaryContainer = document.getElementById('tech-dashboard-summary');
+            summaryContainer.innerHTML = `
+                <div data-status="รอดำเนินการ" class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-yellow-400 cursor-pointer">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">รอดำเนินการ</p>
+                    <p id="tech-summary-pending" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
+                </div>
+                <div data-status="กำลังดำเนินการ" class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-blue-500 cursor-pointer">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">กำลังดำเนินการ</p>
+                    <p id="tech-summary-inprogress" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
+                </div>
+                <div data-status="ซ่อมเสร็จแล้ว" class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-green-500 cursor-pointer">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">ซ่อมเสร็จแล้ว</p>
+                    <p id="tech-summary-completed" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
+                </div>
+                <div data-status="รออะไหล่" class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-red-500 cursor-pointer">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">รออะไหล่</p>
+                    <p id="tech-summary-cancelled" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
+                </div>
+            `;
+            
             try {
-                const techRequests = await callGasApi({ action: 'getRequests', isTechnician: true, employeeId: techId });
-                
-                techDashboardSummary.innerHTML = `
-                    <div class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-yellow-400">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">รอดำเนินการ</p>
-                        <p id="tech-summary-pending" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
-                    </div>
-                    <div class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-blue-500">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">กำลังดำเนินการ</p>
-                        <p id="tech-summary-inprogress" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
-                    </div>
-                    <div class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-green-500">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">ซ่อมเสร็จแล้ว</p>
-                        <p id="tech-summary-completed" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
-                    </div>
-                    <div class="summary-card bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-red-500">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">รออะไหล่</p>
-                        <p id="tech-summary-cancelled" class="text-3xl font-bold text-gray-800 dark:text-white mt-2">0</p>
-                    </div>
-                `;
+                const techRequests = allRequests.filter(req => String(req.assignedToId) === String(techId));
                 updateSummaryCards(techRequests, 'tech-summary');
                 renderRequests(techRequests, techDashboardRequests, currentUser);
-
             } catch (error) {
                 techDashboardRequests.innerHTML = `<p class="text-red-500 col-span-full text-center py-12">เกิดข้อผิดพลาด: ${error.message}</p>`;
             }
         });
         
+        // NEW: Event listener for filtering within the technician dashboard
+        techDashboardDetailsView.addEventListener('click', (e) => {
+            const summaryCard = e.target.closest('.summary-card');
+            if (!summaryCard) return;
+
+            const statusToFilter = summaryCard.dataset.status;
+            const activeTechItem = techDashboardList.querySelector('.bg-blue-100');
+            if (!activeTechItem) return;
+            
+            const techId = activeTechItem.dataset.techId;
+            const filteredRequests = allRequests.filter(req => 
+                String(req.assignedToId) === String(techId) && req.status === statusToFilter
+            );
+            renderRequests(filteredRequests, techDashboardRequests, currentUser);
+        });
+
         techDashboardBackBtn.addEventListener('click', () => {
             techDashboardModal.classList.remove('mobile-details-active');
         });
@@ -1442,48 +1488,29 @@
             ptrStartY = -1;
         });
 
-        // --- Mobile Admin Button Logic ---
-        function setActiveMobileButton(activeBtn) {
-             mobileButtons.forEach(btn => {
-                if (btn) {
-                    btn.classList.remove('bg-purple-600');
-                    btn.classList.add('bg-gray-700', 'dark:bg-gray-600');
-                }
-             });
-             if (activeBtn) {
-                activeBtn.classList.add('bg-purple-600');
-                activeBtn.classList.remove('bg-gray-700', 'dark:bg-gray-600');
-             }
-        }
-
+        // --- Mobile Button Logic ---
         if (toggleAdminFiltersBtn) {
             toggleAdminFiltersBtn.addEventListener('click', () => {
-                const isHidden = adminFiltersContainer.classList.toggle('hidden');
-                if (!isHidden) {
-                    setActiveMobileButton(toggleAdminFiltersBtn);
-                } else {
-                    setActiveMobileButton(showAllRequestsBtn);
-                }
+                adminFiltersContainer.classList.toggle('hidden');
             });
         }
 
         if (openRequestModalBtnAdminMobile) {
             openRequestModalBtnAdminMobile.addEventListener('click', () => showNewRequestModal(true));
         }
+        
+        if (showTechDashboardBtnMobile) {
+            showTechDashboardBtnMobile.addEventListener('click', showTechnicianDashboard);
+        }
 
-        if (showAllRequestsBtn) {
-            showAllRequestsBtn.addEventListener('click', () => {
-                document.getElementById('admin-search-problem').value = '';
-                document.getElementById('admin-search-date').value = '';
-                document.getElementById('admin-search-category').value = '';
-                adminFiltersContainer.classList.add('hidden');
-                setActiveMobileButton(showAllRequestsBtn);
-                
-                let sourceData = currentUser.isAdmin 
-                    ? allRequests 
-                    : allRequests.filter(req => String(req.assignedToId) === String(currentUser.id));
-                renderRequests(sourceData, adminList, currentUser);
+        if (toggleRequesterFiltersBtn) {
+            toggleRequesterFiltersBtn.addEventListener('click', () => {
+                requesterFiltersContainer.classList.toggle('hidden');
             });
+        }
+
+        if (openRequestModalBtnRequesterMobile) {
+            openRequestModalBtnRequesterMobile.addEventListener('click', () => showNewRequestModal(true));
         }
 
 
