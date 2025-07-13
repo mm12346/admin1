@@ -77,7 +77,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* NEW: Styles for mobile technician dashboard navigation */
+        /* Styles for mobile technician dashboard navigation */
         @media (max-width: 767px) {
             #tech-dashboard-modal.mobile-details-active #tech-dashboard-list-panel {
                 display: none;
@@ -214,14 +214,46 @@
                 <div id="admin-view" class="hidden">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                         <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white" id="admin-view-title">แดชบอร์ดจัดการ</h2>
-                        <div class="flex flex-col sm:flex-row flex-wrap gap-2 justify-center sm:justify-end w-full sm:w-auto">
-                            <button id="show-tech-dashboard-btn" class="hidden w-full sm:w-auto bg-purple-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg shadow-purple-500/30">
+                        <!-- Desktop Buttons -->
+                        <div class="hidden sm:flex items-center gap-2">
+                             <button id="show-tech-dashboard-btn" class="hidden bg-purple-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg shadow-purple-500/30">
                                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                                 <span>แดชบอร์ดช่าง</span>
                             </button>
-                            <button id="open-request-modal-btn-admin" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg shadow-green-500/30">
+                            <button id="open-request-modal-btn-admin" class="bg-green-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg shadow-green-500/30">
                                 <i data-lucide="plus-circle" class="w-5 h-5"></i>
                                 <span>แจ้งอันตรายใหม่</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Mobile Action Buttons (inspired by admin.jpg) -->
+                    <div class="grid grid-cols-3 gap-3 mb-6 sm:hidden">
+                        <button id="toggle-admin-filters-btn" class="flex items-center justify-center gap-2 p-3 bg-gray-700 dark:bg-gray-600 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                            <span>ค้นหา</span>
+                        </button>
+                        <button id="show-all-requests-btn" class="flex items-center justify-center gap-2 p-3 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
+                            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                            <span>ภาพรวม</span>
+                        </button>
+                        <button id="open-request-modal-btn-admin-mobile" class="flex items-center justify-center gap-2 p-3 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                            <span>แจ้งใหม่</span>
+                        </button>
+                    </div>
+
+                    <!-- Admin Filters - Add ID and hide by default on mobile -->
+                    <div id="admin-filters-container" class="bg-white dark:bg-gray-800/50 p-4 rounded-lg shadow-sm mb-6 border border-gray-200 dark:border-gray-700 hidden sm:block">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                            <input type="text" id="admin-search-problem" placeholder="ค้นหาตามชื่อปัญหา..." class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 md:col-span-2">
+                            <input type="date" id="admin-search-date" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            <select id="admin-search-category" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">ทุกหมวดหมู่</option>
+                            </select>
+                            <button id="admin-filter-btn" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 flex items-center justify-center gap-2 md:col-span-1">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                                <span>ค้นหา</span>
                             </button>
                         </div>
                     </div>
@@ -257,21 +289,7 @@
                             <p id="summary-cancelled" class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mt-2">0</p>
                         </div>
                     </div>
-
-                    <!-- Admin Filters -->
-                    <div class="bg-white dark:bg-gray-800/50 p-4 rounded-lg shadow-sm mb-6 border border-gray-200 dark:border-gray-700">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                            <input type="text" id="admin-search-problem" placeholder="ค้นหาตามชื่อปัญหา..." class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 md:col-span-2">
-                            <input type="date" id="admin-search-date" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                            <select id="admin-search-category" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">ทุกหมวดหมู่</option>
-                            </select>
-                            <button id="admin-filter-btn" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 flex items-center justify-center gap-2 md:col-span-1">
-                                <i data-lucide="search" class="w-4 h-4"></i>
-                                <span>ค้นหา</span>
-                            </button>
-                        </div>
-                    </div>
+                    
                     <div id="admin-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                        <!-- Admin items will be injected here -->
                     </div>
@@ -726,6 +744,12 @@
         const techDashboardSummary = document.getElementById('tech-dashboard-summary');
         const techDashboardRequests = document.getElementById('tech-dashboard-requests');
         const techDashboardBackBtn = document.getElementById('tech-dashboard-back-btn');
+        // NEW: Mobile Admin Controls
+        const toggleAdminFiltersBtn = document.getElementById('toggle-admin-filters-btn');
+        const adminFiltersContainer = document.getElementById('admin-filters-container');
+        const openRequestModalBtnAdminMobile = document.getElementById('open-request-modal-btn-admin-mobile');
+        const showAllRequestsBtn = document.getElementById('show-all-requests-btn');
+        const mobileButtons = [toggleAdminFiltersBtn, showAllRequestsBtn];
 
 
         const showLoading = (show) => loadingOverlay.classList.toggle('hidden', !show);
@@ -833,20 +857,20 @@
 
         function createRequestCard(request, userSession) {
             const style = statusStyles[request.status] || statusStyles['รอดำเนินการ'];
-            const canDelete = userSession.isAdmin || (userSession.id && String(request.requesterId) === String(userSession.id));
-            const assignedToText = request.assignedToName ? `ผู้รับผิดชอบ: ${request.assignedToName}` : 'ผู้รับผิดชอบ: ยังไม่ระบุ';
+            const canDelete = userSession.isAdmin || (String(request.requesterId) === String(userSession.id));
+            const assignedToText = request.assignedToName || 'ยังไม่ระบุ';
 
             return `
-                 <div class="request-card bg-white dark:bg-gray-800/50 p-5 rounded-xl shadow-lg shadow-gray-200/40 dark:shadow-black/20 hover:shadow-xl dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer border-l-4 ${style.border} transform hover:-translate-y-1" data-id="${request.id}">
+                 <div class="request-card bg-white dark:bg-gray-800/50 p-4 rounded-xl shadow-lg shadow-gray-200/40 dark:shadow-black/20 hover:shadow-xl dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer border-l-4 ${style.border} transform hover:-translate-y-1" data-id="${request.id}">
                     <div class="flex justify-between items-start mb-3">
-                        <h3 class="font-bold text-lg text-gray-800 dark:text-white truncate pr-8">${request.problem}</h3>
+                        <h3 class="font-bold text-lg text-gray-800 dark:text-white truncate pr-4">${request.problem}</h3>
                         <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${style.bg} ${style.text} flex-shrink-0">${request.status}</span>
                     </div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1.5">
                         <p class="flex items-center gap-2"><i data-lucide="layout-grid" class="w-4 h-4 text-gray-400"></i><span class="font-medium">หมวดหมู่:</span> ${request.category}</p>
                         <p class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i><span class="font-medium">สถานที่:</span> ${request.location}</p>
                         <p class="flex items-center gap-2"><i data-lucide="user" class="w-4 h-4 text-gray-400"></i><span class="font-medium">ผู้แจ้ง:</span> ${request.requesterName}</p>
-                        <p class="flex items-center gap-2"><i data-lucide="user-check" class="w-4 h-4 text-gray-400"></i><span class="font-medium">${assignedToText}</span></p>
+                        <p class="flex items-center gap-2"><i data-lucide="user-check" class="w-4 h-4 text-gray-400"></i><span class="font-medium">ผู้รับผิดชอบ:</span> ${assignedToText}</p>
                     </div>
                     <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-3 text-xs text-gray-500 dark:text-gray-500 flex justify-between items-center">
                         <span>แจ้ง: ${new Date(request.date).toLocaleDateString('th-TH')}</span>
@@ -1417,6 +1441,51 @@
             }
             ptrStartY = -1;
         });
+
+        // --- Mobile Admin Button Logic ---
+        function setActiveMobileButton(activeBtn) {
+             mobileButtons.forEach(btn => {
+                if (btn) {
+                    btn.classList.remove('bg-purple-600');
+                    btn.classList.add('bg-gray-700', 'dark:bg-gray-600');
+                }
+             });
+             if (activeBtn) {
+                activeBtn.classList.add('bg-purple-600');
+                activeBtn.classList.remove('bg-gray-700', 'dark:bg-gray-600');
+             }
+        }
+
+        if (toggleAdminFiltersBtn) {
+            toggleAdminFiltersBtn.addEventListener('click', () => {
+                const isHidden = adminFiltersContainer.classList.toggle('hidden');
+                if (!isHidden) {
+                    setActiveMobileButton(toggleAdminFiltersBtn);
+                } else {
+                    setActiveMobileButton(showAllRequestsBtn);
+                }
+            });
+        }
+
+        if (openRequestModalBtnAdminMobile) {
+            openRequestModalBtnAdminMobile.addEventListener('click', () => showNewRequestModal(true));
+        }
+
+        if (showAllRequestsBtn) {
+            showAllRequestsBtn.addEventListener('click', () => {
+                document.getElementById('admin-search-problem').value = '';
+                document.getElementById('admin-search-date').value = '';
+                document.getElementById('admin-search-category').value = '';
+                adminFiltersContainer.classList.add('hidden');
+                setActiveMobileButton(showAllRequestsBtn);
+                
+                let sourceData = currentUser.isAdmin 
+                    ? allRequests 
+                    : allRequests.filter(req => String(req.assignedToId) === String(currentUser.id));
+                renderRequests(sourceData, adminList, currentUser);
+            });
+        }
+
 
         // --- Initial Load ---
         (async () => {
